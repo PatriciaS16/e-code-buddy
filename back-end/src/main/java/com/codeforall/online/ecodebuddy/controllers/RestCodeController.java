@@ -30,22 +30,18 @@ public class RestCodeController {
     //Add DTOS
     //produces = MediaType.APPLICATION_JSON_VALUE,
 
-    @RequestMapping(method = RequestMethod.GET, path = {"/",""})
+    @RequestMapping(method = RequestMethod.GET, path = {"/test"})
     public ResponseEntity<CodeDto> getCode() {
 
         try{
-            return new ResponseEntity<>(codeToCodeDto.convert(codeService.get(4)), HttpStatus.OK);
+            return new ResponseEntity<>(codeToCodeDto.convert(codeService.get(1)), HttpStatus.OK);
         } catch (CodeNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = {"/test"})
-    public ResponseEntity<String> getTest() {
 
-            return new ResponseEntity<>("HELLLOOO", HttpStatus.OK);
-    }
 
     @Autowired
     public void setCodeToCodeDto(CodeToCodeDto codeToCodeDto) {
