@@ -3,7 +3,6 @@ package com.codeforall.online.ecodebuddy.model.bin;
 import com.codeforall.online.ecodebuddy.model.AbstractModel;
 import com.codeforall.online.ecodebuddy.model.Code;
 import com.codeforall.online.ecodebuddy.model.item.Item;
-import com.codeforall.online.ecodebuddy.model.speech.SpeechType;
 import jakarta.persistence.*;
 
 import java.util.HashSet;

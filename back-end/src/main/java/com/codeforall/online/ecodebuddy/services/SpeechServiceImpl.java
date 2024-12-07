@@ -3,8 +3,10 @@ package com.codeforall.online.ecodebuddy.services;
 import com.codeforall.online.ecodebuddy.exceptions.DialogNotFoundException;
 import com.codeforall.online.ecodebuddy.exceptions.SpeechNotFoundException;
 import com.codeforall.online.ecodebuddy.exceptions.TransactionInvalidException;
+import com.codeforall.online.ecodebuddy.model.AbstractModel;
 import com.codeforall.online.ecodebuddy.model.dialog.Dialog;
 import com.codeforall.online.ecodebuddy.model.speech.Speech;
+import com.codeforall.online.ecodebuddy.persistence.daos.DialogDao;
 import com.codeforall.online.ecodebuddy.persistence.daos.SpeechDao;
 import com.codeforall.online.ecodebuddy.persistence.managers.TransactionManager;
 import jakarta.persistence.PersistenceException;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * An {@link SpeechService} implementation
@@ -22,6 +26,7 @@ public class SpeechServiceImpl implements SpeechService {
 
     private TransactionManager transactionManager;
     private SpeechDao speechDao;
+    private DialogDao dialogDao;
     private DialogService dialogService;
 
     /**
@@ -30,6 +35,12 @@ public class SpeechServiceImpl implements SpeechService {
     @Override
     public Speech get(int speechId) throws SpeechNotFoundException {
         return Optional.ofNullable(speechDao.findById(speechId)).orElseThrow(SpeechNotFoundException::new);
+    }
+
+
+    @Override
+    public Dialog getDialog(int dialogId) throws DialogNotFoundException {
+        return Optional.ofNullable(dialogDao.findById(dialogId)).orElseThrow(DialogNotFoundException::new);
     }
 
     /**
@@ -93,6 +104,14 @@ public class SpeechServiceImpl implements SpeechService {
         }
     }
 
+    private Set<Integer> getDialogsIds(Speech speech){
+        Set<Dialog> dialogs = speech.getDialogs();
+
+        return dialogs.stream()
+                .map(AbstractModel::getId)
+                .collect(Collectors.toSet());
+    }
+
     /**
      * Set the transaction manager
      * @param transactionManager
@@ -111,6 +130,14 @@ public class SpeechServiceImpl implements SpeechService {
         this.speechDao = speechDao;
     }
 
+    /**
+     * Set the dialog data access object
+     * @param dialogDao the dialogDao to set
+     */
+    @Autowired
+    public void setDialogDao(DialogDao dialogDao) {
+        this.dialogDao = dialogDao;
+    }
     /**
      * Set the dialog service
      * @param dialogService to set
