@@ -5,7 +5,7 @@ import com.codeforall.online.ecodebuddy.model.Code;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * A concrete converter class that transforms an {@link Code} entity into an {@link CodeDto}.
  */
 @Component
 public class CodeToCodeDto extends AbstractConverter<Code, CodeDto> {

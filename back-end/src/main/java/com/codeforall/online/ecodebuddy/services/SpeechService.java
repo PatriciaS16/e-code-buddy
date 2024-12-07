@@ -1,5 +1,6 @@
 package com.codeforall.online.ecodebuddy.services;
 
+import com.codeforall.online.ecodebuddy.exceptions.DialogNotFoundException;
 import com.codeforall.online.ecodebuddy.exceptions.SpeechNotFoundException;
 import com.codeforall.online.ecodebuddy.model.dialog.Dialog;
 import com.codeforall.online.ecodebuddy.model.speech.Speech;
@@ -18,6 +19,14 @@ public interface SpeechService {
      * @throws SpeechNotFoundException when the speech does not exist
      */
     Speech get(int speechId) throws SpeechNotFoundException;
+
+    /**
+     * Get the dialog with the given dialogID
+     * @param dialogId
+     * @return the dialog
+     * @throws DialogNotFoundException
+     */
+    Dialog getDialog(int dialogId) throws DialogNotFoundException;
 
     /**
      * List all speeches
