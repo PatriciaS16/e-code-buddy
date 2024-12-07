@@ -6,9 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * A class which represents an item of the bins
  */
@@ -17,8 +14,8 @@ import java.util.Set;
 public class Item extends AbstractModel {
 
     private String name;
-    private String description;
-    private int environmentalImpact;
+    private String environmentalImpact;
+    private String ReuseAndRecycling;
     @ManyToOne
     private Bin bin;
 
@@ -53,27 +50,12 @@ public class Item extends AbstractModel {
     public void setBin(Bin bin) {
         this.bin = bin;
     }
-    /**
-     * Get item's description
-     * @return the item's description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Set item's name
-     * @param description given
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     /**
      * Get item's environmentalImpact
      * @return the item's environmentalImpact
      */
-    public int getEnvironmentalImpact() {
+    public String getEnvironmentalImpact() {
         return environmentalImpact;
     }
 
@@ -81,8 +63,24 @@ public class Item extends AbstractModel {
      * Set item's environmentalImpact
      * @param environmentalImpact given
      */
-    public void setEnvironmentalImpact(int environmentalImpact) {
+    public void setEnvironmentalImpact(String environmentalImpact) {
         this.environmentalImpact = environmentalImpact;
+    }
+
+    /**
+     * Get item's reuseAndRecycling
+     * @return the imte's reuseAndRecycling
+     */
+    public String getReuseAndRecycling() {
+        return ReuseAndRecycling;
+    }
+
+    /**
+     * Set item's reuseAndRecycling
+     * @param ReuseAndRecycling given
+     */
+    public void setReuseAndRecycling(String ReuseAndRecycling) {
+        this.ReuseAndRecycling = ReuseAndRecycling;
     }
 }
 
