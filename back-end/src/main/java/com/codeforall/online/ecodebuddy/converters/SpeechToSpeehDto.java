@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * A concrete converter class that transforms an {@link Speech} entity into an {@link SpeechDto}
  */
 @Component
-public class speechToSpeehDto extends AbstractConverter<Speech, SpeechDto> {
+public class SpeechToSpeehDto extends AbstractConverter<Speech, SpeechDto> {
     @Override
     public SpeechDto convert(Speech speech) {
 
