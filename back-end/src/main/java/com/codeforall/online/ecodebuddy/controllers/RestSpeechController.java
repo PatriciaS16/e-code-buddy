@@ -9,10 +9,7 @@ import com.codeforall.online.ecodebuddy.services.SpeechService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.Random;
@@ -29,11 +26,11 @@ public class RestSpeechController {
     SpeechService speechService;
     DialogToDialogDto dialogToDialogDto;
 
-    @RequestMapping(method = RequestMethod.GET, path = {"/speech/welcome", ""})
-    public ResponseEntity<DialogDto> getWelcomeSpeech() {
+    @RequestMapping(method = RequestMethod.GET, path = {"/speech/{sid}", "/speech/{sid}/"})
+    public ResponseEntity<DialogDto> getWelcomeSpeech(@PathVariable("sid") Integer sid) {
 
         try {
-            Speech speech = speechService.get(1);
+            Speech speech = speechService.get(sid);
 
             Set<Dialog> dialogs = speech.getDialogs();
             if (dialogs.isEmpty()) {
