@@ -1,10 +1,7 @@
 package com.codeforall.online.ecodebuddy.converters;
 
 import com.codeforall.online.ecodebuddy.command.DialogDto;
-import com.codeforall.online.ecodebuddy.command.SpeechDto;
 import com.codeforall.online.ecodebuddy.model.dialog.Dialog;
-import com.codeforall.online.ecodebuddy.model.speech.Speech;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 
@@ -14,7 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class DialogToDialogDto extends AbstractConverter<Dialog, DialogDto> {
 
-
+    /**
+     * Convert a dialog into a dialogDto
+     * @param dialog to take the info out of
+     * @return the dialogDto
+     */
     @Override
     public DialogDto convert(Dialog dialog) {
 
