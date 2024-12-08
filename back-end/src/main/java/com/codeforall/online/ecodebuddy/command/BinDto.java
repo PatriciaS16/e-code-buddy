@@ -1,9 +1,12 @@
 package com.codeforall.online.ecodebuddy.command;
 
 import com.codeforall.online.ecodebuddy.model.bin.Bin;
+import com.codeforall.online.ecodebuddy.model.item.Item;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.Set;
 
 /**
  * A class which represent the data transfer object related to {@link Bin}
@@ -22,6 +25,7 @@ public class BinDto {
     @Size(min = 3, max = 200)
     private String description;
 
+    private Set<ItemDto> items;
     /**
      * Get the bin id
      * @return the bin id
@@ -68,5 +72,13 @@ public class BinDto {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<ItemDto> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<ItemDto> items) {
+        this.items = items;
     }
 }
