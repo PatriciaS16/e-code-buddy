@@ -16,5 +16,18 @@ public interface ItemServiceX {
      */
     Item add(Item item) throws TransactionInvalidException;
 
+    /**
+     * Get the customer with the given id
+     * @param id the item id
+     * @return the item
+     * @throws ItemNotFoundExceptionX
+     */
     Item get(int id) throws ItemNotFoundExceptionX;
+
+    /**
+     * Delete a item
+     * @param id of the item to delete
+     * @throws ItemNotFoundExceptionX if the item doesn't exist
+     */
+    void delete(Integer id) throws ItemNotFoundExceptionX;
 }

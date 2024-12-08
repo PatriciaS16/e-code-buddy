@@ -112,11 +112,21 @@ public class RestItemController {
         } catch (ItemNotFoundExceptionX | BinNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, path = {"/bin/{bid}/item/{iid}", "/bin/{bid}/item/{iid}/"} )
+    public ResponseEntity<?> deleteItem(@PathVariable Integer bid, @PathVariable Integer iid) {
 
+        try{
+            binService.removeItem(bid, iid);
 
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        } catch (BinNotFoundException e ){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+    }
 
     @Autowired
     public void setBinService(BinService binService) {

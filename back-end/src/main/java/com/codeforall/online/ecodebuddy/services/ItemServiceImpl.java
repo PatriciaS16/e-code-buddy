@@ -5,6 +5,7 @@ import com.codeforall.online.ecodebuddy.exceptions.TransactionInvalidException;
 import com.codeforall.online.ecodebuddy.model.item.Item;
 import com.codeforall.online.ecodebuddy.persistence.daos.ItemDao;
 import com.codeforall.online.ecodebuddy.persistence.managers.TransactionManager;
+import jakarta.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +38,41 @@ public class ItemServiceImpl implements ItemServiceX{
     }
 
     /**
+     * @see ItemServiceX#delete(Integer)
+     */
+    @Override
+    public void delete(Integer id) throws ItemNotFoundExceptionX {
+
+        try{
+            transactionManager.beginWrite();
+
+            Item item = itemDao.findById(id);
+
+            itemDao.delete(id);
+            transactionManager.commit();
+        } catch (PersistenceException e) {
+            transactionManager.rollback();
+
+        } finally {
+            transactionManager.rollback();
+        }
+    }
+
+    /**
      * Set the item data access object
      * @param itemDao the dialogDao to set
      */
     @Autowired
     public void setItemDao(ItemDao itemDao) {
         this.itemDao = itemDao;
+    }
+
+    /**
+     * Set the transaction manager
+     * @param transactionManager the transaction manager to set
+     */
+    @Autowired
+    public void setTransactionManager(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
     }
 }
