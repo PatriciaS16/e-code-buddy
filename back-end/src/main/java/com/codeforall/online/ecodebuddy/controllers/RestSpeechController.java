@@ -26,6 +26,12 @@ public class RestSpeechController {
     SpeechService speechService;
     DialogToDialogDto dialogToDialogDto;
 
+    /**
+     * Handles HTTP GET resquests to retrieve a random dialog associated with a specific speech.
+     * @param sid the ID of the speech which dialog is to be retrieved
+     * @return a {@link ResponseEntity} containing a random {@link DialogDto} object if the specific speech exists,
+     * or a 404 (Not Found) status if the specific speech is not found, or a 204 (No content) if there is no dialog
+     */
     @RequestMapping(method = RequestMethod.GET, path = {"/speech/{sid}", "/speech/{sid}/"})
     public ResponseEntity<DialogDto> getWelcomeSpeech(@PathVariable("sid") Integer sid) {
 
@@ -55,11 +61,19 @@ public class RestSpeechController {
         }
     }
 
+    /**
+     * Set the speech service
+     * @param speechService to set
+     */
     @Autowired
     public void setSpeechService(SpeechService speechService) {
         this.speechService = speechService;
     }
 
+    /**
+     * Set the dialog to dialog dto converter
+     * @param dialogToDialogDto to set
+     */
     @Autowired
     public void setDialogToDialogDto(DialogToDialogDto dialogToDialogDto) {
         this.dialogToDialogDto = dialogToDialogDto;

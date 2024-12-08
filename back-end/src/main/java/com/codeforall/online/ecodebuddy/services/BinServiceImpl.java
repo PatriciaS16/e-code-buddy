@@ -80,7 +80,8 @@ public class BinServiceImpl implements BinService {
 
             Bin bin = get(binId);
 
-            Item item = itemService.get(itemId);
+            Item item = Optional.ofNullable(itemDao.findById(itemId))
+                    .orElseThrow(ItemNotFoundExceptionX::new);
 
             if (!(bin.getId() == binId)) {
                 throw new BinNotFoundException();

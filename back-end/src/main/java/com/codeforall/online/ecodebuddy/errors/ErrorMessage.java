@@ -1,5 +1,8 @@
 package com.codeforall.online.ecodebuddy.errors;
 
+/**
+ * Utilitarian class to store error messages
+ */
 public class ErrorMessage {
 
     public static final String CODE_NOT_FOUND = "Code does not exist";
