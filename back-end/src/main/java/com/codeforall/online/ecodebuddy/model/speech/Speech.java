@@ -35,25 +35,49 @@ public abstract class Speech extends AbstractModel {
         dialog.setSpeech(this);
     }
 
+    /**
+     * Remove givem dialog from the dialog list
+     * @param dialog the dialog to be removed
+     */
     public void removeDialog(Dialog dialog) {
         dialogs.remove(dialog);
         dialog.setSpeech(null);
     }
 
+    /**
+     * Get the speech type
+     * @return the type of speech
+     */
     public abstract SpeechType getSpeechType();
 
+    /**
+     * List all the dialogs
+     * @return a set of dialogs
+     */
     public Set<Dialog> getDialogs() {
         return dialogs;
     }
 
+    /**
+     * Set the dialog to the givem dialogs list
+     * @param dialogs given
+     */
     public void setDialogs(Set<Dialog> dialogs) {
         this.dialogs = dialogs;
     }
 
+    /**
+     * Get the speech Code
+     * @return the speech code
+     */
     public Code getCode() {
         return code;
     }
 
+    /**
+     * Set the speech code
+     * @param code to set
+     */
     public void setCode(Code code) {
         this.code = code;
     }

@@ -28,29 +28,6 @@ public class Code extends AbstractModel {
     )
     private Set<Bin> bins = new HashSet<>();
 
-    /*private static final Code INSTANCE = new Code();
-
-    public static Code getInstance() {
-        return INSTANCE;
-    }
-
-    private Code() {
-        this.name = "Cod-e";
-        initializeBins();
-
-    }
-
-    /**
-     * Add all bins to Cod-e
-     */
-    /*private void initializeBins(){
-        bins.add(BlueBin.getInstance());
-        bins.add(BrownBin.getInstance());
-        bins.add(GreenBin.getInstance());
-        bins.add(RedBin.getInstance());
-        bins.add(YellowBin.getInstance());
-    }*/
-
     /**
      * List all bins
      * @return a Set of bins

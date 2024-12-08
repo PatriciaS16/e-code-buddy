@@ -21,6 +21,12 @@ public class RestBinController {
     BinService binService;
     BinToBinDto binToBinDto;
 
+    /**
+     * Handles HTTP GET Requests to retrieve a specific bin
+     * @param id the ID of the Bin to be retrieved
+     * @return a {@link ResponseEntity} containing the {@link BinDto} object if the bin exists, or a 404 (Not Found) status
+     * if the bin does not exist
+     */
     @RequestMapping(method = RequestMethod.GET, path = {"/bin/{id}", "/bin/{id}/"})
     public ResponseEntity<BinDto> getBin(@PathVariable Integer id) {
         try{
@@ -32,11 +38,19 @@ public class RestBinController {
         }
     }
 
+    /**
+     * Set the bin to bin dto converter
+     * @param binToBinDto to set
+     */
     @Autowired
     public void setBinToBinDto(BinToBinDto binToBinDto) {
         this.binToBinDto = binToBinDto;
     }
 
+    /**
+     * Set the bin service
+     * @param binService to set
+     */
     @Autowired
     public void setBinService(BinService binService) {
         this.binService = binService;
