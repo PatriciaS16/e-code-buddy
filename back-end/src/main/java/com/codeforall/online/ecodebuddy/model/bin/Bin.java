@@ -29,11 +29,6 @@ public abstract class Bin extends AbstractModel {
     @ManyToOne
     private Code code;
 
-    /*
-    protected Bin(String color) {
-        this.color = color;
-    }*/
-
     /**
      * Add an item to the bin items list
      * @param item the item to be added
@@ -52,8 +47,11 @@ public abstract class Bin extends AbstractModel {
         item.setBin(null);
     }
 
+    /**
+     * Get the bin type
+     * @return the type of bin
+     */
     public abstract BinType getBinType();
-
 
     /**
      * Get bin's Color

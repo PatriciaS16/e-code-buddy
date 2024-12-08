@@ -15,7 +15,6 @@ import java.util.Optional;
 @Service
 public class CodeServiceImpl implements CodeService {
 
-    private TransactionManager transactionManager;
     private CodeDao codeDao;
 
 
@@ -34,10 +33,5 @@ public class CodeServiceImpl implements CodeService {
     @Autowired
     public void setCodeDao(CodeDao codeDao) {
         this.codeDao = codeDao;
-    }
-
-    @Autowired
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
     }
 }

@@ -24,10 +24,4 @@ public interface ItemServiceX {
      */
     Item get(int id) throws ItemNotFoundExceptionX;
 
-    /**
-     * Delete a item
-     * @param id of the item to delete
-     * @throws ItemNotFoundExceptionX if the item doesn't exist
-     */
-    void delete(Integer id) throws ItemNotFoundExceptionX;
 }

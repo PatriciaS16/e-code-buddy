@@ -17,7 +17,6 @@ import java.util.Optional;
 @Service
 public class ItemServiceImpl implements ItemServiceX{
 
-    private TransactionManager transactionManager;
     private ItemDao itemDao;
 
 
@@ -38,27 +37,6 @@ public class ItemServiceImpl implements ItemServiceX{
     }
 
     /**
-     * @see ItemServiceX#delete(Integer)
-     */
-    @Override
-    public void delete(Integer id) throws ItemNotFoundExceptionX {
-
-        try{
-            transactionManager.beginWrite();
-
-            Item item = itemDao.findById(id);
-
-            itemDao.delete(id);
-            transactionManager.commit();
-        } catch (PersistenceException e) {
-            transactionManager.rollback();
-
-        } finally {
-            transactionManager.rollback();
-        }
-    }
-
-    /**
      * Set the item data access object
      * @param itemDao the dialogDao to set
      */
@@ -67,12 +45,4 @@ public class ItemServiceImpl implements ItemServiceX{
         this.itemDao = itemDao;
     }
 
-    /**
-     * Set the transaction manager
-     * @param transactionManager the transaction manager to set
-     */
-    @Autowired
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }
 }
