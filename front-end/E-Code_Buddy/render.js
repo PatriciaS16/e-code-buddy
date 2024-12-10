@@ -311,7 +311,8 @@ function renderFirstInteractionButtons(parentElement, query, itemType) {
 
     // Handle "No" button, go back to home
     noButton.addEventListener("click", () => {
-        firstInteractionOccurred = false;
+        firstInteractionOccurred = false; 
+        window.history.pushState({}, "", "/");
         home();
     });
 }
