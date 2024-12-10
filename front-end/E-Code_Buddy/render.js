@@ -315,3 +315,332 @@ function renderFirstInteractionButtons(parentElement, query, itemType) {
         home();
     });
 }
+
+// Function to handle form submission
+async function handleFormSubmit(form) {
+    try {
+        // Create a FormData object from the submitted form
+        const formData = new FormData(form);
+
+        // Get the waste category entered by the user
+        const wasteCategory = formData.get("wasteCategory");
+        if (!wasteCategory) {
+            alert("Please specify the waste category (e.g., Blue Bin).");
+            return;
+        }
+
+        // Extract the first word of the waste category (the bin color)
+        const binColor = wasteCategory.split(" ")[0].trim().toLowerCase();
+        
+        // Fetch all the bins from the backend
+        const binsResponse = await fetch(`${API_BASE_URL}/bin/wastehubdata`);
+        if (!binsResponse.ok) {
+            throw new Error("Failed to fetch bins.");
+        }
+
+        // Parse the JSON response containing the bins
+        const bins = await binsResponse.json();
+
+        // Find a matching bin based on the color from the waste category
+        const matchingBin = bins.find(bin => bin.color.toLowerCase().includes(binColor)); 
+        if (!matchingBin) {
+            alert(`No bin found for the color "${binColor}". Please check your input.`);
+            return;
+        }
+
+        // Create the new item object with the data from the form
+        const newItem = {
+            name: formData.get("name"),
+            environmentalImpact: formData.get("environmentalImpact"),
+            reuseAndRecycling: formData.get("reuseAndRecycling"),
+        };
+
+        // Send a POST request to add the item to the correct bin
+        const addItemResponse = await fetch(`${API_BASE_URL}/bin/${matchingBin.id}/add`, {
+            method: "POST",
+            body: JSON.stringify(newItem),
+            headers: { "Content-Type": "application/json" },
+        });
+
+        // Check if the item was added successfully
+        if (!addItemResponse.ok) {
+            const errorData = await addItemResponse.json();
+            throw new Error(errorData.message || "Failed to add item.");
+        }
+
+        alert("Item added successfully!"); 
+        home();
+    } catch (error) {
+        console.error("Error adding item:", error); 
+        alert(`Error: ${error.message}`);
+    }
+}
+
+// Function to show the form for adding an unknown item
+export function showAddItemForm(itemName = "") {
+    const dynamicContainer = document.querySelector(".dynamic-container");
+    const dynamicContent = document.querySelector(".dynamic-content");
+    dynamicContent.innerHTML = ""; 
+
+    // Create the form element to hold all the fields
+    const form = document.createElement("form");
+    form.className = "add-item-form";
+    
+    // Create and append the form title
+    const formTitle = document.createElement("h4");
+    formTitle.textContent = "Add a new item";
+    form.appendChild(formTitle);
+
+    // Create an array of form fields (using the helper function)
+    const fields = [
+        createFormField({ type: "text", labelText: "Name:", inputId: "itemName", inputName: "name", placeholder: "e.g., Water Bottle", value: itemName }),
+        createFormField({ type: "text", labelText: "Waste Category:", inputId: "wasteCategory", inputName: "wasteCategory", placeholder: "e.g., Yellow Bin" }),
+        createFormField({ type: "text", labelText: "Environmental Impact:", inputId: "environmentalImpact", inputName: "environmentalImpact", placeholder: "e.g., Takes 450 years to decompose." }),
+        createFormField({ type: "text", labelText: "Reuse & Recycling:", inputId: "reuseAndRecycling", inputName: "reuseAndRecycling", placeholder: "e.g., Recyclable into new bottles." }),
+    ];
+
+    // Append each form field (label and input) to the form
+    fields.forEach(field => {
+        form.appendChild(field.label);
+        form.appendChild(field.input);
+    });
+
+    // Create and append the submit button
+    const submitButton = document.createElement("button");
+    submitButton.type = "submit"; 
+    submitButton.textContent = "Add Item"; 
+    form.appendChild(submitButton);
+
+    // Add an event listener to handle form submission
+    form.addEventListener("submit", (e) => {
+        e.preventDefault(); 
+        handleFormSubmit(form); 
+    });
+
+    dynamicContent.appendChild(form);
+    dynamicContainer.appendChild(dynamicContent);
+}
+
+// Function to display an item details based on user input
+export function displayItemByUserInput(itemName) {
+    const dynamicContainer = document.querySelector(".dynamic-container");
+    const dynamicContent = document.querySelector(".dynamic-content");
+    dynamicContent.innerHTML = "";
+
+    // Fetch all bins and items from the backend
+    fetch(`${API_BASE_URL}/bin/wastehubdata`)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch bins and items");
+            }
+            return response.json();
+        })
+        .then((bins) => { 
+            // Initialize variables to store the matched item and bin category
+            let matchedItem = null;
+            let binCategory = "Unknown"; 
+
+            // Iterate through all bins
+            for (const bin of bins) { 
+                // Search an item in the current bin that matches the provided itemName (and store it)
+                matchedItem = bin.items.find(item => item.name.toLowerCase() === itemName.toLowerCase());
+                if (matchedItem) { 
+                    // Store the bin color if the item is found
+                    binCategory = bin.color; 
+                    // Stop searching after finding the item
+                    break;
+                }
+            }
+
+            if (!matchedItem) {
+                throw new Error(`Item "${itemName}" not found`);
+            }
+
+            // Dynamically create and append item details
+            dynamicContent.appendChild(createTextElement("Name", matchedItem.name));
+            dynamicContent.appendChild(createTextElement("Waste Category", binCategory));
+            dynamicContent.appendChild(createTextElement("Environmental Impact", matchedItem.environmentalImpact));
+            dynamicContent.appendChild(createTextElement("Reuse & Recycling", matchedItem.reuseAndRecycling));
+
+            dynamicContainer.appendChild(dynamicContent);
+        })
+        .catch((error) => {
+            console.error("Error fetching item or bin details:", error);
+            appendErrorMessage(dynamicContent, `Could not find details for "${itemName}". Please try again.`);
+            dynamicContainer.appendChild(dynamicContent);
+        });
+}
+
+// Function to display all items from all bins (waste hub)
+export function displayAllItems() {
+    const dynamicContainer = document.querySelector(".dynamic-container");
+    const dynamicContent = document.querySelector(".dynamic-content");
+    dynamicContent.innerHTML = ""; 
+
+    // Waste Hub Title Div
+    const wasteHubTitleDiv = document.createElement("div");
+    wasteHubTitleDiv.className = "waste-hub-title-div";
+
+    // Waste Hub Image
+    const wasteHubImg = document.createElement("img");
+    wasteHubImg.src = "assets/waste-hub.png"; 
+    wasteHubImg.className = "waste-hub-img";
+    wasteHubTitleDiv.appendChild(wasteHubImg); 
+
+    // Waste Hub Text
+    const wasteHubText = document.createElement("h4");
+    wasteHubText.innerHTML = "WASTE HUB (WASTE COLLECTION POINT)"; 
+    wasteHubText.className = "waste-hub-text";
+    wasteHubTitleDiv.appendChild(wasteHubText); 
+
+    // Append the waste hub title div
+    dynamicContent.appendChild(wasteHubTitleDiv); 
+
+    // Fetch all bins from the backend (including items in each bin)
+    fetch(`${API_BASE_URL}/bin/wastehubdata`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch bins");
+            }
+            return response.json();
+        })
+        .then(bins => {
+            // Array to hold all items, each with a 'binCategory' (color of the bin)
+            const allItems = [];
+            // Iterate through each bin and its items
+            bins.forEach(bin => {
+                bin.items.forEach(item => {
+                    // Add item to the array with binCategory (bin color)
+                    allItems.push({
+                        ...item,
+                        binCategory: bin.color
+                    });
+                });
+            });
+
+            // Create a card for each item
+            allItems.forEach(item => {
+                const itemCard = document.createElement("div");
+                itemCard.className = "item-card";
+
+                itemCard.appendChild(createItemTextElement("Name", item.name));
+                itemCard.appendChild(createItemTextElement("Waste Category", item.binCategory));
+                itemCard.appendChild(createItemTextElement("Environmental Impact", item.environmentalImpact));
+                itemCard.appendChild(createItemTextElement("Reuse & Recycling", item.reuseAndRecycling));
+
+                dynamicContent.appendChild(itemCard);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching bins or items:", error);
+            appendErrorMessage(dynamicContent, "Could not load bins or items. Please try again."); 
+        });
+
+    dynamicContainer.appendChild(dynamicContent);
+} 
+
+// Function to display items for a specific bin
+export function displayBinItems(binId) {
+    const dynamicContainer = document.querySelector(".dynamic-container");
+    const dynamicContent = document.querySelector(".dynamic-content");
+    dynamicContent.innerHTML = ""; 
+
+    // Bin Title Div
+    const binTitleDiv = document.createElement("div");
+    binTitleDiv.className = "bin-title-div";
+
+    // Fetch bin details from the backend
+    fetch(`${API_BASE_URL}/bin/${binId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch bin details");
+            }
+            return response.json();
+        })
+        .then(bin => { 
+            // Extract color name from bin.color 
+            const binColor = bin.color.split(' ')[0];
+
+            // Update the bin title div with bin-specific information 
+
+            // Bin Image
+            const binImg = document.createElement("img");
+            binImg.src = `assets/${binColor.toLowerCase()}-bin.png`;
+            binImg.className = "bin-img";
+            binTitleDiv.appendChild(binImg); 
+
+            // Bin Text
+            const binText = document.createElement("h4");
+            binText.innerHTML = `${bin.color.toUpperCase()}`; 
+            binText.className = "bin-text";
+            binTitleDiv.appendChild(binText);
+
+            // Append the bin title div
+            dynamicContent.appendChild(binTitleDiv);
+
+            // Fetch and display the items for this bin
+            return fetch(`${API_BASE_URL}/bin/${binId}/items`);
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch bin items");
+            }
+            return response.json();
+        })
+        .then(items => {
+            if (items.length === 0) { 
+                appendErrorMessage(dynamicContent, "This bin currently has no items.");
+            } else {
+                items.forEach(item => {
+                    const itemCard = document.createElement("div");
+                    itemCard.className = "item-card";
+
+                    itemCard.appendChild(createItemTextElement("Name", item.name));
+                    itemCard.appendChild(createItemTextElement("Environmental Impact", item.environmentalImpact));
+                    itemCard.appendChild(createItemTextElement("Reuse & Recycling", item.reuseAndRecycling));
+
+                    // Create the delete button
+                    const deleteDiv = document.createElement("div");
+                    deleteDiv.className = "delete-div";
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.className = "delete-item-button";
+                    deleteButton.innerHTML = "Delete"; 
+                    deleteDiv.appendChild(deleteButton);
+
+                    // Add an event listener for the delete functionality
+                    deleteButton.addEventListener("click", () => {
+                        // Ask the user for confirmation
+                        const userConfirmed = confirm(`Are you sure you want to delete the item "${item.name}"?`);
+                        if (userConfirmed) {
+                            // Call the delete endpoint using fetch
+                            fetch(`${API_BASE_URL}/bin/${binId}/item/${item.id}`, {
+                                method: "DELETE",
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    // On success, remove the item
+                                    itemCard.remove();
+                                } else {
+                                    alert("Failed to delete item. Try again later.");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error deleting item:", error);
+                                alert("An error occurred while deleting the item.");
+                            });
+                        }
+                    });
+
+                    itemCard.appendChild(deleteDiv);
+                    dynamicContent.appendChild(itemCard);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching bin or item details:", error);
+            appendErrorMessage(dynamicContent, "Could not load bin or items. Please try again."); 
+        });
+
+    dynamicContainer.appendChild(dynamicContent);
+} 
