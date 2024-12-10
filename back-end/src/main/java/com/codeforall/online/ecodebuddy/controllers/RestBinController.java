@@ -1,18 +1,15 @@
 package com.codeforall.online.ecodebuddy.controllers;
 
 import com.codeforall.online.ecodebuddy.command.BinDto;
-import com.codeforall.online.ecodebuddy.command.ItemDto;
 import com.codeforall.online.ecodebuddy.converters.BinToBinDto;
 import com.codeforall.online.ecodebuddy.exceptions.BinNotFoundException;
 import com.codeforall.online.ecodebuddy.model.bin.Bin;
-import com.codeforall.online.ecodebuddy.model.item.Item;
 import com.codeforall.online.ecodebuddy.services.BinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
