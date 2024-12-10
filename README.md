@@ -1,6 +1,8 @@
 # e-code-buddy
 Cod-E is an interactive recycling assistant designed to help users identify and categorize waste. Search for items to learn how to recycle them, explore waste categories, and build a smarter, greener future.
 
+---
+
 ## **Languages and Technologies**
 ### **Frontend**:
 - HTML
@@ -22,7 +24,7 @@ Cod-E is an interactive recycling assistant designed to help users identify and 
 
 ## Project Management and Collaboration tools
 
-- FigJam: Used for task management and project coordination.
+- FigJam: Used for project concept, task management and project coordination.
 - Figma: Used for all designs of the app.
 - Discord: Inputs and Meetings.
 
