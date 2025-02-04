@@ -12,7 +12,7 @@ Cod-E is an interactive recycling assistant designed to help users identify and 
 ### **Backend**:
 - Java
 - Spring Framework (Spring Boot, Spring Data JPA)
-- Hibernate Validator
+- Hibernate
 
 ### **Database**:
 - PostgreSQL
